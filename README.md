@@ -1,29 +1,105 @@
-# Create T3 App
+# T3 Book Library Application
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A modern web application built with the T3 stack (TypeScript, Next.js, Prisma, and NextAuth.js) for managing and discovering books using the Google Books API.
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- User authentication via GitHub
+- Book search and discovery powered by Google Books API
+- PostgreSQL database integration with Prisma ORM
+- Type-safe API routes and database queries
+- Responsive and modern UI
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Prerequisites
+
+- Node.js 16.x or later
+- pnpm package manager
+- PostgreSQL database (we use Neon Database)
+- GitHub account for authentication
+- Google Books API key
+
+## Getting Started
+
+1. Clone the repository:
+```bash
+git clone <your-repository-url>
+cd <your-project-name>
+```
+
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+3. Set up environment variables:
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Auth
+AUTH_SECRET="your-auth-secret"
+AUTH_GITHUB_ID="your-github-client-id"
+AUTH_GITHUB_SECRET="your-github-client-secret"
+
+# Database
+DATABASE_URL="your-postgresql-connection-string"
+
+# Google Books API
+GOOGLE_BOOKS_API_KEY="your-google-books-api-key"
+```
+
+4. Initialize the database:
+```bash
+npx prisma db push
+```
+
+5. Start the development server:
+```bash
+pnpm run dev
+```
+
+## Environment Variables
+
+### Required Environment Variables
+
+- `AUTH_SECRET`: A secret key for NextAuth.js authentication. Generate using `npx auth secret`
+- `AUTH_GITHUB_ID`: GitHub OAuth application client ID
+- `AUTH_GITHUB_SECRET`: GitHub OAuth application client secret
+- `DATABASE_URL`: PostgreSQL connection URL
+- `GOOGLE_BOOKS_API_KEY`: API key for Google Books API
+
+### How to Obtain Environment Variables
+
+1. **GitHub Authentication**:
+   - Go to GitHub Developer Settings
+   - Create a new OAuth application
+   - Set callback URL to `http://localhost:3000/api/auth/callback/github` for development
+   - Copy the generated Client ID and Client Secret
+
+2. **Database URL**:
+   - Create a postgresql database
+   - Copy the provided connection string
+   - Replace placeholders with your credentials
+
+3. **Google Books API Key**:
+   - Visit Google Cloud Console
+   - Create a new project
+   - Enable the Books API
+   - Create credentials and copy the API key
+
+
+## Available Scripts
+
+- `pnpm run dev`: Start development server
+- `pnpm run build`: Build for production
+- `pnpm start`: Start production server
+- `pnpm run lint`: Run ESLint
+- `pnpm run typecheck`: Check TypeScript types
+
+## Technologies Used
 
 - [Next.js](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [TypeScript](https://www.typescriptlang.org/)
