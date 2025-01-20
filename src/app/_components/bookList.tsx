@@ -43,7 +43,7 @@ const SavedBooksList: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+    <div className="mx-auto my-12 max-w-4xl rounded-lg bg-white p-6 shadow-lg">
       <h1 className="mb-6 text-center text-3xl font-extrabold text-[#2e026d]">
         Your Books
       </h1>
