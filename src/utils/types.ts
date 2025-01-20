@@ -10,6 +10,11 @@ export const GoogleBooksResponseSchema = z.object({
         authors: z.array(z.string()).optional(),
         publishedDate: z.string().optional(),
         description: z.string().optional(),
+        imageLinks: z
+          .object({
+            thumbnail: z.string().optional(),
+          })
+          .optional(),
       }),
     }),
   ),
@@ -17,3 +22,5 @@ export const GoogleBooksResponseSchema = z.object({
 
 // Infer the TypeScript type from the zod schema
 export type GoogleBooksResponse = z.infer<typeof GoogleBooksResponseSchema>;
+
+export type BookItem = GoogleBooksResponse["items"][0];
