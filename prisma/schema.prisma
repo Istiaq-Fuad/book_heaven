@@ -27,17 +27,34 @@ model Post {
 }
 
 model Book {
-    id            String   @id @default(uuid())
+    id            String       @id @default(uuid())
     title         String
-    author        String?
+    authors       BookAuthor[] // Relation to the join table
     publishedDate String?
     description   String?
     coverImageUrl String?
-    createdAt     DateTime @default(now())
+    createdAt     DateTime     @default(now())
     userId        String
-    user          User     @relation(fields: [userId], references: [id])
+    user          User         @relation(fields: [userId], references: [id])
 
     @@index([title])
+}
+
+model Author {
+    id    String       @id @default(uuid())
+    name  String       @unique
+    books BookAuthor[] // Relation to the join table
+
+    @@index([name])
+}
+
+model BookAuthor {
+    bookId   String
+    authorId String
+    book     Book   @relation(fields: [bookId], references: [id])
+    author   Author @relation(fields: [authorId], references: [id])
+
+    @@id([bookId, authorId]) // Composite primary key
 }
 
 // Necessary for Next auth
