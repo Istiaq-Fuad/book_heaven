@@ -42,43 +42,70 @@ const BooksSearch: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Google Books Search</h1>
-      <form onSubmit={handleSearch} style={{ marginBottom: "1rem" }}>
+    <div className="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-lg">
+      <h1 className="mb-6 text-center text-3xl font-extrabold text-[#2e026d]">
+        Google Books Search
+      </h1>
+
+      <form onSubmit={handleSearch} className="mb-4 flex items-center">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter book title"
-          style={{ marginRight: "0.5rem" }}
+          className="flex-grow rounded-lg border-2 border-gray-300 p-2 text-black focus:border-[#9b4de0] focus:outline-none focus:ring-2 focus:ring-[#9b4de0]"
         />
-
-        <button type="submit">Search</button>
+        <button
+          type="submit"
+          className="ml-4 rounded-lg bg-[#9b4de0] px-6 py-2 text-white hover:bg-[#7a3ca6] focus:outline-none focus:ring-2 focus:ring-[#9b4de0]"
+        >
+          Search
+        </button>
       </form>
 
-      {isLoading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
+      {isLoading && (
+        <p className="text-center text-lg text-gray-500">Loading...</p>
+      )}
+      {error && (
+        <p className="text-center text-red-500">Error: {error.message}</p>
+      )}
 
       {data?.items?.length ? (
-        <ul>
+        <ul className="space-y-6">
           {data.items.map((book) => (
-            <li key={book.id} style={{ marginBottom: "1rem" }}>
-              <h2>{book.volumeInfo.title}</h2>
-              <p>
-                <strong>Authors:</strong>{" "}
-                {book.volumeInfo.authors?.join(", ") ?? "Unknown"}
-              </p>
-              <p>
-                <strong>Published Date:</strong>{" "}
-                {book.volumeInfo.publishedDate ?? "Unknown"}
-              </p>
-              <p>
-                {book.volumeInfo.description ?? "No description available."}
-              </p>
+            <li key={book.id} className="rounded-lg bg-gray-100 p-4 shadow-md">
+              <div className="flex items-center gap-6">
+                {/* Book Cover Image */}
+                {book.volumeInfo.imageLinks?.thumbnail && (
+                  <img
+                    src={book.volumeInfo.imageLinks.thumbnail}
+                    alt={book.volumeInfo.title}
+                    className="h-48 w-32 rounded-lg object-cover shadow-md"
+                  />
+                )}
+
+                <div className="flex-grow">
+                  <h2 className="text-xl font-semibold text-[#2e026d]">
+                    {book.volumeInfo.title}
+                  </h2>
+                  <p className="mt-2 text-gray-700">
+                    <strong>Authors:</strong>{" "}
+                    {book.volumeInfo.authors?.join(", ") ?? "Unknown"}
+                  </p>
+                  <p className="mt-2 text-gray-700">
+                    <strong>Published Date:</strong>{" "}
+                    {book.volumeInfo.publishedDate ?? "Unknown"}
+                  </p>
+                  <p className="mt-2 text-gray-600">
+                    {book.volumeInfo.description ?? "No description available."}
+                  </p>
+                </div>
+              </div>
+
               <button
                 onClick={() => handleSaveBook(book)}
                 disabled={isSaving}
-                style={{ marginTop: "1rem" }}
+                className="mt-4 rounded-lg bg-[#9b4de0] px-6 py-2 text-white hover:bg-[#7a3ca6] focus:outline-none focus:ring-2 focus:ring-[#9b4de0] disabled:opacity-50"
               >
                 {isSaving ? "Saving..." : "Save Book"}
               </button>
@@ -86,7 +113,9 @@ const BooksSearch: React.FC = () => {
           ))}
         </ul>
       ) : (
-        !isLoading && <p>No books found.</p>
+        !isLoading && (
+          <p className="text-center text-lg text-gray-500">No books found.</p>
+        )
       )}
     </div>
   );
