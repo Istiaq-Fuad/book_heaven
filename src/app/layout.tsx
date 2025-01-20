@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import Link from "next/link";
+import { auth } from "~/server/auth";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -11,13 +13,43 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+          {/* Navbar */}
+          <nav className="w-full bg-[#15162c] py-4 shadow-lg">
+            <div className="container mx-auto flex items-center justify-between px-6">
+              <Link href={"/"}>
+                <h1 className="text-3xl font-extrabold text-white">
+                  <span className="text-[#9b4de0]">Books</span> Heaven
+                </h1>
+              </Link>
+              <div className="space-x-6">
+                {session?.user && (
+                  <Link
+                    href="/saved-books"
+                    className="text-lg text-white hover:text-[#9b4de0]"
+                  >
+                    Saved Books
+                  </Link>
+                )}
+                <Link
+                  href={session ? "/api/auth/signout" : "/api/auth/signin"}
+                  className="text-lg text-white hover:text-[#9b4de0]"
+                >
+                  {session ? "Sign out" : "Sign in"}
+                </Link>
+              </div>
+            </div>
+          </nav>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </main>
       </body>
     </html>
   );

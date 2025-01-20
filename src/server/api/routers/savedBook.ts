@@ -43,6 +43,10 @@ export const savedBooksRouter = createTRPCRouter({
   getSavedBooks: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id; // Get the user ID from the session
 
+    if(!userId) {
+      throw new Error('User not found');
+    }
+
     const books = await ctx.db.book.findMany({
       where: { userId },
       include: {

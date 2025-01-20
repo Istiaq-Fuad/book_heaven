@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { api } from "~/trpc/react";
 
 const SavedBooksList: React.FC = () => {
@@ -36,9 +37,11 @@ const SavedBooksList: React.FC = () => {
               <div className="flex items-center gap-6">
                 {/* Book Cover Image */}
                 {book.coverImageUrl && (
-                  <img
+                  <Image
                     src={book.coverImageUrl}
                     alt={book.title}
+                    width={128}
+                    height={192}
                     className="h-48 w-32 rounded-lg object-cover shadow-md"
                   />
                 )}
