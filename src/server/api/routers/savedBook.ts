@@ -74,4 +74,15 @@ export const savedBooksRouter = createTRPCRouter({
       authors: book.authors.map((ba) => ba.author.name),
     }));
   }),
+
+  // Procedure to delete a book from the database
+  deleteBook: protectedProcedure
+    .input(z.string().min(1, "Book ID is required"))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id; // Get the user ID from the session
+
+      return ctx.db.book.delete({
+        where: { id: input, userId },
+      });
+    }),
 });

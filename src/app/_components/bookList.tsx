@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 
 const SavedBooksList: React.FC = () => {
@@ -10,7 +11,14 @@ const SavedBooksList: React.FC = () => {
     isLoading,
     isError,
     error,
+    refetch,
   } = api.savedBooks.getSavedBooks.useQuery();
+
+  // Use the tRPC hook for the delete mutation
+  const deleteBookMutation = api.savedBooks.deleteBook.useMutation();
+
+  // State to track the book being deleted
+  const [deletingBookId, setDeletingBookId] = useState<string | null>(null);
 
   // Handle loading and error states
   if (isLoading) {
@@ -20,6 +28,19 @@ const SavedBooksList: React.FC = () => {
   if (isError) {
     return <p>Error loading books: {error.message}</p>;
   }
+
+  // Handle delete action
+  const handleDelete = async (bookId: string) => {
+    try {
+      setDeletingBookId(bookId); // Mark the book as being deleted
+      await deleteBookMutation.mutateAsync(bookId);
+      await refetch(); // Refetch books after deletion
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    } finally {
+      setDeletingBookId(null); // Reset the deleting state
+    }
+  };
 
   return (
     <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg">
@@ -64,6 +85,19 @@ const SavedBooksList: React.FC = () => {
                     <p className="mt-2 text-gray-600">{book.description}</p>
                   )}
                 </div>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDelete(book.id)}
+                  disabled={deletingBookId === book.id}
+                  className={`rounded px-4 py-2 text-white shadow ${
+                    deletingBookId === book.id
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-red-500 hover:bg-red-600"
+                  }`}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))}
