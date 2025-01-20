@@ -34,6 +34,7 @@ const BooksSearch: React.FC = () => {
     const coverImageUrl = imageLinks?.thumbnail ?? "";
 
     saveBook({
+      id: book.id,
       title,
       authors: authorsList,
       publishedDate,

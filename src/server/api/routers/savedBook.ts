@@ -6,6 +6,7 @@ export const savedBooksRouter = createTRPCRouter({
   saveBook: protectedProcedure
     .input(
       z.object({
+        id: z.string().min(1, "Book ID is required"),
         title: z.string().min(1, "Title is required"),
         authors: z.array(z.string()).min(1, "At least one author is required"),
         publishedDate: z.string().optional(),
@@ -14,12 +15,21 @@ export const savedBooksRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { title, authors, publishedDate, description, coverImageUrl } =
+      const { id, title, authors, publishedDate, description, coverImageUrl } =
         input;
       const userId = ctx.session.user.id; // Get the user ID from the session
 
+      const book = await ctx.db.book.findFirst({
+        where: { id },
+      });
+
+      if (book) {
+        return;
+      }
+
       return ctx.db.book.create({
         data: {
+          id,
           title,
           publishedDate,
           description,
@@ -43,8 +53,8 @@ export const savedBooksRouter = createTRPCRouter({
   getSavedBooks: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id; // Get the user ID from the session
 
-    if(!userId) {
-      throw new Error('User not found');
+    if (!userId) {
+      throw new Error("User not found");
     }
 
     const books = await ctx.db.book.findMany({

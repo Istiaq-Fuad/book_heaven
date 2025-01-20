@@ -27,7 +27,7 @@ model Post {
 }
 
 model Book {
-    id            String       @id @default(uuid())
+    id            String       @id
     title         String
     authors       BookAuthor[] // Relation to the join table
     publishedDate String?
