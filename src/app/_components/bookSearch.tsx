@@ -5,7 +5,9 @@ import React, { useState } from "react";
 import { api } from "~/trpc/react";
 import { type BookItem } from "~/utils/types";
 
-const BooksSearch: React.FC = () => {
+const BooksSearch: React.FC<{ showSaveOption: boolean }> = ({
+  showSaveOption,
+}) => {
   const [query, setQuery] = useState("");
 
   // Use the tRPC query hook
@@ -106,13 +108,15 @@ const BooksSearch: React.FC = () => {
                 </div>
               </div>
 
-              <button
-                onClick={() => handleSaveBook(book)}
-                disabled={isSaving}
-                className="mt-4 rounded-lg bg-[#9b4de0] px-6 py-2 text-white hover:bg-[#7a3ca6] focus:outline-none focus:ring-2 focus:ring-[#9b4de0] disabled:opacity-50"
-              >
-                {isSaving ? "Saving..." : "Save Book"}
-              </button>
+              {showSaveOption && (
+                <button
+                  onClick={() => handleSaveBook(book)}
+                  disabled={isSaving}
+                  className="mt-4 rounded-lg bg-[#9b4de0] px-6 py-2 text-white hover:bg-[#7a3ca6] focus:outline-none focus:ring-2 focus:ring-[#9b4de0] disabled:opacity-50"
+                >
+                  {isSaving ? "Saving..." : "Save Book"}
+                </button>
+              )}
             </li>
           ))}
         </ul>

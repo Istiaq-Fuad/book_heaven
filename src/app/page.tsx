@@ -1,6 +1,6 @@
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
-import BooksSearch from "./_components/book";
+import BooksSearch from "./_components/bookSearch";
 
 export default async function Home() {
   const session = await auth();
@@ -22,7 +22,7 @@ export default async function Home() {
         </div>
 
         {/* {session?.user && <SavedBooksList />} */}
-        <BooksSearch />
+        <BooksSearch showSaveOption={session?.user !== undefined} />
       </div>
     </HydrateClient>
   );
