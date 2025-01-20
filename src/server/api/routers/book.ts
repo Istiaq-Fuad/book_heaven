@@ -11,13 +11,13 @@ export const booksRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const { query, maxResults = 10 } = input;
+      const { query } = input;
 
       try {
         const response = await fetch(
           `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
             query,
-          )}&maxResults=${maxResults}`,
+          )}&key=${process.env.GOOGLE_BOOKS_API_KEY}`,
         );
 
         if (!response.ok) {
