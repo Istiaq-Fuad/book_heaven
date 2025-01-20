@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 import BooksSearch from "./_components/book";
+import SavedBooksList from "./_components/savedBook";
 
 export default async function Home() {
   const session = await auth();
@@ -33,6 +34,7 @@ export default async function Home() {
             </div>
           </div>
 
+          {session?.user && <SavedBooksList />}
           <BooksSearch />
         </div>
       </main>

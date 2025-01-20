@@ -2,16 +2,20 @@
 
 import React, { useState } from "react";
 import { api } from "~/trpc/react";
+import { type BookItem } from "~/utils/types";
 
 const BooksSearch: React.FC = () => {
   const [query, setQuery] = useState("");
-  const [maxResults, setMaxResults] = useState(5);
 
   // Use the tRPC query hook
   const { data, isLoading, error, refetch } = api.book.searchBooks.useQuery(
-    { query, maxResults },
+    { query },
     { enabled: false }, // Disable automatic fetching
   );
+
+  const { mutate: saveBook, status: saveStatus } =
+    api.savedBooks.saveBook.useMutation();
+  const isSaving = saveStatus === "pending";
 
   // Handle form submission
   const handleSearch = async (e: React.FormEvent) => {
@@ -19,6 +23,22 @@ const BooksSearch: React.FC = () => {
     if (query.trim()) {
       await refetch(); // Trigger the query manually
     }
+  };
+
+  // Handle saving the book to the database
+  const handleSaveBook = (book: BookItem) => {
+    const { title, authors, publishedDate, description, imageLinks } =
+      book.volumeInfo;
+    const authorsList = authors ?? ["Unknown Author"];
+    const coverImageUrl = imageLinks?.thumbnail ?? "";
+
+    saveBook({
+      title,
+      authors: authorsList,
+      publishedDate,
+      description,
+      coverImageUrl,
+    });
   };
 
   return (
@@ -32,13 +52,7 @@ const BooksSearch: React.FC = () => {
           placeholder="Enter book title"
           style={{ marginRight: "0.5rem" }}
         />
-        <input
-          type="number"
-          value={maxResults}
-          onChange={(e) => setMaxResults(Number(e.target.value))}
-          placeholder="Max results"
-          style={{ marginRight: "0.5rem", width: "80px" }}
-        />
+
         <button type="submit">Search</button>
       </form>
 
@@ -61,6 +75,13 @@ const BooksSearch: React.FC = () => {
               <p>
                 {book.volumeInfo.description ?? "No description available."}
               </p>
+              <button
+                onClick={() => handleSaveBook(book)}
+                disabled={isSaving}
+                style={{ marginTop: "1rem" }}
+              >
+                {isSaving ? "Saving..." : "Save Book"}
+              </button>
             </li>
           ))}
         </ul>
